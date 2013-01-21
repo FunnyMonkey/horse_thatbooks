@@ -15,15 +15,16 @@ if ( defined( 'THROTTLE' ) && THROTTLE ) {
 	}
 }
 
-$query = "#thatcamp";
+$query = "#educon";
 
 // Create our twitter API object
 require_once( dirname(__FILE__) . '/lib/php-twitteroauth/twitteroauth/twitteroauth.php' );
 $oauth = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
 
 // Get search. Go back and get the most recent few pages, for better completeness
+// This can be balanced against the number of saved tweets in tweets.txt
 $tweets_found = array();
-for ( $i = 1; $i <= 5; $i++ ) {
+for ( $i = 1; $i <= 8; $i++ ) {
 	$these_tweets = $oauth->get(
 		'http://search.twitter.com/search.json',
 		array(
@@ -84,8 +85,8 @@ foreach( $tweets_found as $tweet ) {
 
 $etcount = count( $existing_tweets );
 
-if ( $etcount > 500 ) {
-	$existing_tweets = array_slice( $existing_tweets, $etcount - 500 );
+if ( $etcount > 800 ) {
+	$existing_tweets = array_slice( $existing_tweets, $etcount - 800 );
 }
 
 file_put_contents( 'tweets.txt', json_encode( $existing_tweets ) );
@@ -133,8 +134,8 @@ $output = horse_thatbooks_balance_quotes( $output );
 // Miscellaneous cleanup
 $output = horse_thatbooks_misc_cleanup( $output );
 
-// Add the #thatcamp hash tag
-$output .= ' #thatcamp';
+// Add the #educon hash tag
+$output .= ' #educon';
 
 // Post status
 $oauth->post('statuses/update', array('status' => $output));
